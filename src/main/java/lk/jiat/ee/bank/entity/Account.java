@@ -6,6 +6,16 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "accounts")
+@NamedQueries({
+        @NamedQuery(
+                name = "Account.findByAccountNo",
+                query = "SELECT a FROM Account a WHERE a.accNo = :accountNo"
+        ),
+        @NamedQuery(
+                name = "Account.findByUserEmail",
+                query = "SELECT a FROM Account a WHERE a.user.email = :email ORDER BY a.id"
+        )
+})
 public class Account {
 
     @Id
@@ -19,50 +29,21 @@ public class Account {
 
     private double balance;
 
-    public Account() {
-    }
-
     @Enumerated(EnumType.STRING)
     private AccountType accountType;
 
-    public User getUser() {
-        return user;
+    @JoinColumn(name = "user_id")
+    @ManyToOne
+    private User user;
+
+    public Account() {
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public AccountType getAccountType() {
-        return accountType;
-    }
-
-    public void setAccountType(AccountType accountType) {
-        this.accountType = accountType;
-    }
-
-    public double getBalance() {
-        return balance;
-    }
-
-    public void setBalance(double balance) {
-        this.balance = balance;
-    }
-
-    public LocalDateTime getOpenDate() {
-        return openDate;
-    }
-
-    public void setOpenDate(LocalDateTime openDate) {
-        this.openDate = openDate;
-    }
-
-    public String getAccNo() {
-        return accNo;
-    }
-
-    public void setAccNo(String accNo) {
+    public Account(String accNo, LocalDateTime openDate, double balance, AccountType accountType) {
         this.accNo = accNo;
+        this.openDate = openDate;
+        this.balance = balance;
+        this.accountType = accountType;
     }
 
     public Integer getId() {
@@ -73,15 +54,43 @@ public class Account {
         this.id = id;
     }
 
-    @JoinColumn(name = "user_id")
-    @ManyToOne
-    private User user;
+    public String getAccNo() {
+        return accNo;
+    }
 
-
-    public Account(String accNo, LocalDateTime openDate, double balance, AccountType accountType) {
+    public void setAccNo(String accNo) {
         this.accNo = accNo;
+    }
+
+    public LocalDateTime getOpenDate() {
+        return openDate;
+    }
+
+    public void setOpenDate(LocalDateTime openDate) {
         this.openDate = openDate;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(double balance) {
         this.balance = balance;
+    }
+
+    public AccountType getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(AccountType accountType) {
         this.accountType = accountType;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

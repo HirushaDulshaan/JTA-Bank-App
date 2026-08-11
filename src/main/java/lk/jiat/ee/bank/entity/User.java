@@ -7,7 +7,16 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
-
+@NamedQueries({
+        @NamedQuery(
+                name = "User.findByEmail",
+                query = "SELECT u FROM User u WHERE u.email = :email"
+        ),
+        @NamedQuery(
+                name = "User.findByEmailAndPassword",
+                query = "SELECT u FROM User u WHERE u.email = :email AND u.password = :password"
+        )
+})
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,9 +27,8 @@ public class User {
     @Column(unique = true ,nullable = false)
     private String email;
 
-    @Column( nullable = false, length = 8)
+    @Column(nullable = false, length = 8)
     private String password;
-
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Account> accounts = new ArrayList<>();
